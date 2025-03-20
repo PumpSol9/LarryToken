@@ -1,0 +1,48 @@
+Pump.Fun Secret Mascot Larry Token System
+
+This script models a fictional mascot, Larry, for the Pump.Fun memecoin.
+It includes tokenomics, transactions, and interactions with a development wallet.
+
+Dev Wallet: DggeE4ZVQbKYe2e32NiBxEmWjSELsokvNVWHvJcxw6x4
+"""
+
+import random
+
+class LarryToken:
+    def __init__(self, total_supply, dev_wallet):
+        self.total_supply = total_supply
+        self.dev_wallet = dev_wallet
+        self.balances = {dev_wallet: total_supply}  # All tokens start in the dev wallet
+        self.transactions = []
+
+    def transfer(self, sender, receiver, amount):
+        if sender not in self.balances or self.balances[sender] < amount:
+            print("Insufficient funds!")
+            return False
+        
+        self.balances[sender] -= amount
+        self.balances[receiver] = self.balances.get(receiver, 0) + amount
+        self.transactions.append((sender, receiver, amount))
+        print(f"{amount} Larry tokens transferred from {sender} to {receiver}.")
+        return True
+
+    def get_balance(self, address):
+        return self.balances.get(address, 0)
+
+    def random_airdrop(self, num_recipients):
+        recipients = [f"User{random.randint(1, 1000)}" for _ in range(num_recipients)]
+        for recipient in recipients:
+            amount = random.randint(1, 100)
+            self.transfer(self.dev_wallet, recipient, amount)
+        print("Airdrop complete!")
+
+# Initialize Larry Token System
+dev_wallet = "DggeE4ZVQbKYe2e32NiBxEmWjSELsokvNVWHvJcxw6x4"
+larry_token = LarryToken(total_supply=1000000, dev_wallet=dev_wallet)
+
+# Example Transactions
+larry_token.transfer(dev_wallet, "User123", 500)
+larry_token.random_airdrop(5)
+
+# Display balances
+print("Dev Wallet Balance:", larry_token.get_balance(dev_wallet))
